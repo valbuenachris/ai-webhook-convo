@@ -1,10 +1,9 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Chat App Design System - All colors, gradients, fonts, etc defined here */
 
 @layer base {
   :root {
@@ -17,8 +16,8 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -36,23 +35,21 @@ All colors MUST be HSL.
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Chat specific colors */
+    --chat-bg: 220 27% 98%;
+    --chat-user-bubble: 217 91% 60%;
+    --chat-user-text: 0 0% 100%;
+    --chat-ai-bubble: 0 0% 100%;
+    --chat-ai-text: 222.2 84% 4.9%;
+    --chat-input-bg: 0 0% 100%;
+    --chat-typing: 142 76% 36%;
+    
+    /* Gradients */
+    --gradient-bg: linear-gradient(135deg, hsl(220 27% 98%) 0%, hsl(217 20% 95%) 100%);
+    --gradient-user: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 55%) 100%);
+    --gradient-ai: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
   }
 
   .dark {
@@ -65,8 +62,8 @@ All colors MUST be HSL.
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -83,14 +80,19 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Dark mode chat colors */
+    --chat-bg: 222.2 84% 4.9%;
+    --chat-user-bubble: 217 91% 60%;
+    --chat-user-text: 0 0% 100%;
+    --chat-ai-bubble: 217.2 32.6% 17.5%;
+    --chat-ai-text: 210 40% 98%;
+    --chat-input-bg: 217.2 32.6% 17.5%;
+    --chat-typing: 142 76% 36%;
+    
+    --gradient-bg: linear-gradient(135deg, hsl(222.2 84% 4.9%) 0%, hsl(217.2 32.6% 8%) 100%);
+    --gradient-user: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 55%) 100%);
+    --gradient-ai: linear-gradient(135deg, hsl(217.2 32.6% 17.5%) 0%, hsl(217.2 32.6% 15%) 100%);
   }
 }
 
@@ -100,6 +102,66 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    background: var(--gradient-bg);
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .chat-bg {
+    background: hsl(var(--chat-bg));
+  }
+  
+  .chat-user-bubble {
+    background: var(--gradient-user);
+    color: hsl(var(--chat-user-text));
+  }
+  
+  .chat-ai-bubble {
+    background: var(--gradient-ai);
+    color: hsl(var(--chat-ai-text));
+    border: 1px solid hsl(var(--border));
+  }
+  
+  .chat-input-bg {
+    background: hsl(var(--chat-input-bg));
+  }
+  
+  .chat-typing {
+    color: hsl(var(--chat-typing));
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .animate-bounce-dots {
+    animation: bounceDots 1.4s infinite ease-in-out;
+  }
+  
+  .animate-bounce-dots:nth-child(1) { animation-delay: -0.32s; }
+  .animate-bounce-dots:nth-child(2) { animation-delay: -0.16s; }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceDots {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
